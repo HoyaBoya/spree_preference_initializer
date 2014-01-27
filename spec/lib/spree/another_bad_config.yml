@@ -1,0 +1,10 @@
+default: &default
+  spree_backend_configuration: &default_spree_backend_configuration
+    config_class:               'Spree::AnotherBadConfiguration'
+    foo:                        'bar'
+
+development:
+  <<: *default
+
+test: &test
+  <<: *default

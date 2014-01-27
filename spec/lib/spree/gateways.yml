@@ -1,0 +1,16 @@
+default: &default
+  braintree: &default_braintree
+    gateway_id:                   1
+    gateway_class:                'Spree::Gateway::BraintreeGateway'
+    merchant_id:                  'test'
+    merchant_account_id:          'test'
+    public_key:                   'test'
+    private_key:                  'test'
+    client_side_encryption_key:   'test'
+    environment:                  'sandbox'
+
+development:
+  <<: *default
+
+test: &test
+  <<: *default
