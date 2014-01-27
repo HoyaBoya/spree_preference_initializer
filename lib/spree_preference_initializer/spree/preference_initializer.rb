@@ -5,6 +5,7 @@ module Spree
     CONFIG_CLASS =    'config_class'
     GATEWAY_CLASS =   'gateway_class'
     GATEWAY_ID =      'gateway_id'
+    GATEWAY_NAME =    'gateway_name'
 
     @@warnings = []
 
@@ -70,16 +71,24 @@ module Spree
           # The logic is different to how Spree models Gateway preferences vs standard preferences like above (they are not app global).
           YAML.load_file(file)[Rails.env].each_pair do |key, value|
             gateway_id = value[GATEWAY_ID]
-            gateway = value[GATEWAY_CLASS].constantize.find_by_id(gateway_id)
+            gateway_name = value[GATEWAY_NAME]
+
+            gateway = if gateway_id
+              value[GATEWAY_CLASS].constantize.find_by_id(gateway_id)
+            else
+              value[GATEWAY_CLASS].constantize.find_by_name(gateway_name)          
+            end
+
             value.each_pair do |app_key, app_value|
               # If we have a gateway and property is not set to what we want
-              if gateway && ![GATEWAY_ID, GATEWAY_CLASS].include?(app_key) && gateway.get_preference(app_key) != app_value
+              if gateway && ![GATEWAY_ID, GATEWAY_NAME, GATEWAY_CLASS].include?(app_key) && gateway.get_preference(app_key) != app_value
                 gateway.set_preference(app_key, app_value)
               end
             end
           end
         # On any DB that has 0 migrations, we need to catch errors to allow the migration to proceed.
         rescue ActiveRecord::StatementInvalid => e 
+          raise e if Rails.env.test?
           Honeybadger.notify(e) if defined?(Honeybadger)
           Rails.logger.warn(e.message)
           Rails.logger.warn(e.backtrace.split('\n'))

@@ -1,6 +1,6 @@
 default: &default
   braintree: &default_braintree
-    gateway_id:                   1
+    gateway_name:                 'Test Credit Card' 
     gateway_class:                'Spree::Gateway::BraintreeGateway'
     merchant_id:                  'test'
     merchant_account_id:          'test'

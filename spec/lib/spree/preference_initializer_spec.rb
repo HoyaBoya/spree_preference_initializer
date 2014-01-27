@@ -16,11 +16,38 @@ describe Spree::PreferenceInitializer do
   end
 
   describe 'load_gateways' do
-    context 'when given the Rails gateways.yml' do
+    context 'when given gateways.yml' do
       subject { Spree::PreferenceInitializer.load_gateways(File.dirname(__FILE__) + "/gateways.yml") }
 
-      it 'should not explode' do
-        subject
+      before(:each) do
+        Spree::Gateway.delete_all
+        Spree::Gateway::BraintreeGateway.create!(name: 'Braintree Credit Card')
+        Spree::Gateway.first.id.should == 1
+        Spree::Gateway.count.should == 1
+      end
+
+      [:merchant_id, :merchant_account_id, :public_key, :private_key, :client_side_encryption_key, :environment].each do |i|
+        it "should initialize a Spree::Gateway::BraintreeGateway with #{i}" do
+          subject
+          Spree::Gateway::BraintreeGateway.find(1).options[i].should_not be_nil
+        end
+      end
+    end
+
+    context 'when given gateways_by_name.yml' do
+      subject { Spree::PreferenceInitializer.load_gateways(File.dirname(__FILE__) + "/gateways_by_name.yml") }
+
+      before(:each) do
+        Spree::Gateway.delete_all
+        Spree::Gateway::BraintreeGateway.create!(name: 'Test Credit Card')
+        Spree::Gateway.count.should == 1
+      end
+
+      [:merchant_id, :merchant_account_id, :public_key, :private_key, :client_side_encryption_key, :environment].each do |i|
+        it "should initialize a Spree::Gateway::BraintreeGateway with #{i}" do
+          subject
+          Spree::Gateway::BraintreeGateway.find(1).options[i].should_not be_nil
+        end
       end
     end
 
