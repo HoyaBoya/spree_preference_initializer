@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'rake'
-require 'spree_preference_initializer/spree/preference_initializer'
+require 'spree/preference_initializer'
 
 describe Spree::PreferenceInitializer do
   before(:each) do
