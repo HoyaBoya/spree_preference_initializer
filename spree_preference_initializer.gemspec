@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 1.9.3'
 
   s.author    = 'HoyaBoya'
-  s.homepage  = 'http://www.spreecommerce.com'
+  s.homepage  = 'https://github.com/HoyaBoya/spree_preference_initializer'
 
   s.files       = `git ls-files`.split("\n")
   s.test_files  = `git ls-files -- {test,spec,features}/*`.split("\n")
