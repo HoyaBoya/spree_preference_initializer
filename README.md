@@ -18,7 +18,7 @@ Using
 -----
 
 ```config/initializers/spree.rb
-require 'spree/preference_initializer'
+require 'spree_preference_initializer/spree/preference_initializer'
 
 Spree::PreferenceInitializer.load_configs
 Spree::PreferenceInitializer.load_gateways
