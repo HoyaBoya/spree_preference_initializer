@@ -14,6 +14,18 @@ The problem (for some) is that these configurations are stored in the database a
 
 Rather than break out of the Spree preferences model, this Gem allows for configuration of the Spree app via YAML, by placing these configurations into Spree preferences. Developers can continue to use Spree preferences but not be concerned that the actual configuration is coming from an external source provided by DevOps.
 
+Using
+-----
+
+```config/initializers/spree.rb
+require 'spree/preference_initializer'
+
+Spree::PreferenceInitializer.load_configs
+Spree::PreferenceInitializer.load_gateways
+```
+
+The require can placed in any Rails load file as well, and this may be required if using a configuration setting for a Rails configuration. i.e. the Redis host if using the redis_store.
+
 Configuring
 -----------
 
