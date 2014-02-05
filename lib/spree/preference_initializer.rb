@@ -79,10 +79,21 @@ module Spree
               value[GATEWAY_CLASS].constantize.find_by_name(gateway_name)          
             end
 
+            next if gateway.nil?
+
             value.each_pair do |app_key, app_value|
-              # If we have a gateway and property is not set to what we want
-              if gateway && ![GATEWAY_ID, GATEWAY_NAME, GATEWAY_CLASS].include?(app_key) && gateway.get_preference(app_key) != app_value
+              # Do not process gateway keys
+              next if [GATEWAY_ID, GATEWAY_NAME, GATEWAY_CLASS].include?(app_key)
+
+              # If it is a preference
+              if gateway.has_preference?(app_key) && gateway.get_preference(app_key) != app_value
                 gateway.set_preference(app_key, app_value)
+              end
+
+              # If it is a member variable and a field we should allow configurable
+              # Avoid issue with Braintree environment preference and PaymentMethod member environment
+              if gateway.respond_to?("#{app_key}=") && gateway[app_key] != app_value && ['name', 'active', 'auto_capture'].include?(app_key)
+                gateway.update_attribute(app_key, app_value)
               end
             end
           end

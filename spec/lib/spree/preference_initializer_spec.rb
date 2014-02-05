@@ -21,7 +21,7 @@ describe Spree::PreferenceInitializer do
 
       before(:each) do
         Spree::Gateway.delete_all
-        Spree::Gateway::BraintreeGateway.create!(name: 'Braintree Credit Card')
+        Spree::Gateway::BraintreeGateway.create!(name: 'Braintree Credit Card', active: true)
         Spree::Gateway.first.id.should == 1
         Spree::Gateway.count.should == 1
       end
@@ -44,9 +44,16 @@ describe Spree::PreferenceInitializer do
       end
 
       [:merchant_id, :merchant_account_id, :public_key, :private_key, :client_side_encryption_key, :environment].each do |i|
-        it "should initialize a Spree::Gateway::BraintreeGateway with #{i}" do
+        it "should initialize a Spree::Gateway::BraintreeGateway preference with #{i}" do
           subject
           Spree::Gateway::BraintreeGateway.find(1).options[i].should_not be_nil
+        end
+      end
+
+      [:active].each do |i|
+        it "should initialize a  Spree::Gateway::BraintreeGateway attribute with #{i}" do
+          subject
+          Spree::Gateway::BraintreeGateway.find(1).send(i).should be_false
         end
       end
     end
