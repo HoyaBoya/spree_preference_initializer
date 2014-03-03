@@ -102,13 +102,6 @@ Add spree_preference_initializer to your Gemfile:
 gem 'spree_preference_initializer'
 ```
 
-Bundle your dependencies and run the installation generator:
-
-```shell
-bundle
-bundle exec rails g spree_preference_initializer:install
-```
-
 Testing
 -------
 
